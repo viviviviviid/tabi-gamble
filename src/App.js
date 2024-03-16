@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
+import ABI from './Gamble_ABI';
+import ethers from 'ethers'
 
 const App = () => {
   const [account, setAccount] = useState('');
@@ -29,9 +31,10 @@ const App = () => {
   const startGambleHandler = async () => {
     if (!window.ethereum) return;
     // 컨트랙트 주소와 ABI를 사용하여 컨트랙트 인스턴스 생성
-    // const contract = new ethers.Contract(contractAddress, contractABI, signer);
+    const contract = new web3.eth.Contract(ABI, process.env.REACT_APP_CONTRACTADDRESS);
     
     try {
+      // web3.utils.toWei('1', 'ether');
       // const transactionResponse = await contract.gambleStart({ value: ethers.utils.parseEther(betAmount) });
       // 가정: 트랜잭션이 성공하고, 이벤트 로그로부터 결과를 얻어옴
       // 여기서는 임의의 결과를 생성함
