@@ -32,20 +32,23 @@ const App = () => {
     if (!window.ethereum) return;
     // 컨트랙트 주소와 ABI를 사용하여 컨트랙트 인스턴스 생성
     const contract = new web3.eth.Contract(ABI, process.env.REACT_APP_CONTRACTADDRESS);
+    console.log(contract)
     
     try {
-      // web3.utils.toWei('1', 'ether');
-      // const transactionResponse = await contract.gambleStart({ value: ethers.utils.parseEther(betAmount) });
-      // 가정: 트랜잭션이 성공하고, 이벤트 로그로부터 결과를 얻어옴
-      // 여기서는 임의의 결과를 생성함
-      const mockResult = Math.random() < 0.5;
-      if (mockResult) {
-        setGameResult(`You win! You got ${betAmount * 2}`); // 승리 로직
+      console.log("betAmount value", web3.utils.toWei('1', 'ether'));
+      const transactionResponse = await contract.methods.GambleStart().send({
+        from: account, // 호출자의 주소
+        value: web3.utils.toWei(betAmount, 'ether')
+    });
+      const gambleResult = transactionResponse.events.GambleResult.returnValues.result;
+      if (gambleResult) {
+        alert(`You win! You got ${betAmount * 2}`);
       } else {
-        setGameResult('You lose..'); // 패배 로직
+        alert('You lose..');
       }
       setShowModal(true);
     } catch (error) {
+      alert('Transaction was failed. Try click button again.');
       console.error(error);
     }
   };
