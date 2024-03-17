@@ -35,7 +35,9 @@ const App = () => {
     console.log(contract)
     
     try {
-      console.log("betAmount value", web3.utils.toWei('1', 'ether'));
+      const randomValue = Math.random() * (0.01 - 0.001) + 0.001;
+      setBetAmount(String(randomValue));
+
       const transactionResponse = await contract.methods.GambleStart().send({
         from: account, // 호출자의 주소
         value: web3.utils.toWei(betAmount, 'ether')
@@ -62,13 +64,6 @@ const App = () => {
       <button onClick={() => {connectWallet()}}>
         {account ? 'Connected' : 'Connect Wallet'}
       </button>
-
-      <input
-        type="text"
-        value={betAmount}
-        onChange={(e) => setBetAmount(e.target.value)}
-        placeholder="Bet amount in ETH"
-      />
 
       <button onClick={startGambleHandler}>Start Gamble</button>
 
