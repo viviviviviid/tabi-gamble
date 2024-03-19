@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import ABI from './Gamble_ABI';
-import ethers from 'ethers'
 
 const App = () => {
   const [account, setAccount] = useState('');
@@ -35,22 +34,22 @@ const App = () => {
     console.log(contract)
     
     try {
-      const randomValue = Math.random() * (0.01 - 0.001) + 0.001;
+      const randomValue = (Math.random() * (0.001 - 0.0001) + 0.0001).toFixed(4);
       setBetAmount(String(randomValue));
 
       const transactionResponse = await contract.methods.GambleStart().send({
         from: account, // 호출자의 주소
         value: web3.utils.toWei(betAmount, 'ether')
-    });
+      });
       const gambleResult = transactionResponse.events.GambleResult.returnValues.result;
       if (gambleResult) {
-        alert(`You win! You got ${betAmount * 2}`);
+        setGameResult(`You win! You got ${betAmount * 2}`);
       } else {
-        alert('You lose..');
+        setGameResult('You lose..');
       }
       setShowModal(true);
     } catch (error) {
-      alert('Transaction was failed. Try click button again.');
+      setGameResult('Transaction was failed. Try click button again.');
       console.error(error);
     }
   };
@@ -61,12 +60,14 @@ const App = () => {
 
   return (
     <div>
-      <button onClick={() => {connectWallet()}}>
-        {account ? 'Connected' : 'Connect Wallet'}
-      </button>
-
-      <button onClick={startGambleHandler}>Start Gamble</button>
-
+      <div>
+        <button onClick={() => {connectWallet()}}>
+          {account ? 'Connected' : 'Connect Wallet'}
+        </button>
+      </div>
+      <div>
+        <button onClick={startGambleHandler}>Start Gamble</button>
+      </div>
       {showModal && (
         <div>
           <p>{gameResult}</p>
